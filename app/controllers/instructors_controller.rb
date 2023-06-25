@@ -9,11 +9,11 @@ class InstructorsController < ApplicationController
 
     def show
         instructor = finder
-        render json: instructor, except: [:created_at, :updated_at], status: :ok
+        render json: instructor, except: [:created_at, :updated_at], include: :students ,status: :ok
     end
 
     def create
-        new_ instructor = Instructor.create!(valid_params)
+        new_instructor = Instructor.create!(valid_params)
         render json: new_instructor, except: [:created_at, :updated_at], status: :created
     end
 
@@ -25,7 +25,7 @@ class InstructorsController < ApplicationController
 
     def destroy
         instructor = finder
-        Instructor.destroy!(instructor)
+        instructor.destroy
         head :no_content
     end
 
@@ -37,7 +37,7 @@ class InstructorsController < ApplicationController
         end
 
         def valid_params
-            params.permit(:name)
+            params.permit(:id, :name)
         end
 
         def not_found
